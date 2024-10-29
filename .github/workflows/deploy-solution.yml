@@ -1,0 +1,26 @@
+name: Deploy ALM_24Sept
+
+on:
+  workflow_run:
+    workflows: ["Pack ALM_24Sept"]
+    branches: [main]
+    types:
+      - completed
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: windows-latest
+    environment: production
+    steps:
+      - uses: dawidd6/action-download-artifact@v2
+        with:
+          workflow: main.yml
+          name: packed-solution
+      - uses: microsoft/powerplatform-actions/import-solution@v0
+        with:
+          environment-url: https://orgc84a0ff6.crm.dynamics.com
+          app-id: 42c34a83-9be8-49c0-9c80-52e0d67e459d
+          tenant-id: 82506baf-09ef-4fcf-a09f-375df072f488
+          client-secret : 
+          solution-file: ALM_24Sept_managed.zip
